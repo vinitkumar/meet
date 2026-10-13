@@ -65,3 +65,8 @@ h2 a {
 h2 a {
   text-decoration: none;
 }
+
+.lk-remote-control-active {
+  outline: 2px solid var(--lk-accent-bg, #1f8cf9);
+  outline-offset: -2px;
+}

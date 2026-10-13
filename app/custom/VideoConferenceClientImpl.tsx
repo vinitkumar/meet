@@ -13,6 +13,7 @@ import {
 import { DebugMode } from '@/lib/Debug';
 import { useEffect, useMemo, useState } from 'react';
 import { KeyboardShortcuts } from '@/lib/KeyboardShortcuts';
+import { RemoteControl } from '@/lib/RemoteControl';
 import { SettingsMenu } from '@/lib/SettingsMenu';
 import { useSetupE2EE } from '@/lib/useSetupE2EE';
 import { useLowCPUOptimizer } from '@/lib/usePerfomanceOptimiser';
@@ -23,7 +24,8 @@ export function VideoConferenceClientImpl(props: {
   codec: VideoCodec | undefined;
   singlePeerConnection: boolean | undefined;
 }) {
-  const keyProvider = new ExternalE2EEKeyProvider();
+  // A new provider per render would rebuild roomOptions and the Room.
+  const keyProvider = useMemo(() => new ExternalE2EEKeyProvider(), []);
   const { worker, e2eePassphrase } = useSetupE2EE();
   const e2eeEnabled = !!(e2eePassphrase && worker);
 
@@ -76,6 +78,9 @@ export function VideoConferenceClientImpl(props: {
       room.localParticipant.enableCameraAndMicrophone().catch((error) => {
         console.error(error);
       });
+      return () => {
+        room.disconnect();
+      };
     }
   }, [room, props.liveKitUrl, props.token, connectOptions, e2eeSetupComplete]);
 
@@ -85,6 +90,7 @@ export function VideoConferenceClientImpl(props: {
     <div className="lk-room-container">
       <RoomContext.Provider value={room}>
         <KeyboardShortcuts />
+        <RemoteControl />
         <VideoConference
           chatMessageFormatter={formatChatMessageLinks}
           SettingsComponent={
