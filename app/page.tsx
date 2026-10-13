@@ -5,6 +5,8 @@ import React, { Suspense, useState } from 'react';
 import { encodePassphrase, generateRoomId, randomString } from '@/lib/client-utils';
 import styles from '../styles/Home.module.css';
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 function Tabs(props: React.PropsWithChildren<{}>) {
   const searchParams = useSearchParams();
   const tabIndex = searchParams?.get('tab') === 'custom' ? 1 : 0;
@@ -165,7 +167,12 @@ export default function Page() {
     <>
       <main className={styles.main} data-lk-theme="default">
         <div className="header">
-          <img src="/images/livekit-meet-home.svg" alt="LiveKit Meet" width="360" height="45" />
+          <img
+            src={`${BASE_PATH}/images/livekit-meet-home.svg`}
+            alt="LiveKit Meet"
+            width="360"
+            height="45"
+          />
           <h2>
             Open source video conferencing app built on{' '}
             <a href="https://github.com/livekit/components-js?ref=meet" rel="noopener">

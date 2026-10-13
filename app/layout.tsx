@@ -4,6 +4,8 @@ import '@livekit/components-styles/prefabs';
 import type { Metadata, Viewport } from 'next';
 import { Toaster } from 'react-hot-toast';
 
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+
 export const metadata: Metadata = {
   title: {
     default: 'LiveKit Meet | Conference app build with LiveKit open source',
@@ -31,15 +33,19 @@ export const metadata: Metadata = {
   icons: {
     icon: {
       rel: 'icon',
-      url: '/favicon.ico',
+      url: `${BASE_PATH}/favicon.ico`,
     },
     apple: [
       {
         rel: 'apple-touch-icon',
-        url: '/images/livekit-apple-touch.png',
+        url: `${BASE_PATH}/images/livekit-apple-touch.png`,
         sizes: '180x180',
       },
-      { rel: 'mask-icon', url: '/images/livekit-safari-pinned-tab.svg', color: '#070707' },
+      {
+        rel: 'mask-icon',
+        url: `${BASE_PATH}/images/livekit-safari-pinned-tab.svg`,
+        color: '#070707',
+      },
     ],
   },
 };
