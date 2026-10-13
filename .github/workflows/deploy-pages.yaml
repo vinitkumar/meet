@@ -24,6 +24,9 @@ jobs:
       NEXT_PUBLIC_CONN_DETAILS_ENDPOINT: ${{ vars.CONN_DETAILS_ENDPOINT }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          # Background images are stored in Git LFS.
+          lfs: true
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
