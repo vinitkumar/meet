@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PageClientImpl } from './PageClientImpl';
-import { isVideoCodec } from '@/lib/types';
+import { parseRoomOptions } from '@/lib/roomRoute';
 
 export default async function Page({
   params,
@@ -16,21 +16,7 @@ export default async function Page({
   }>;
 }) {
   const _params = await params;
-  const _searchParams = await searchParams;
-  const codec =
-    typeof _searchParams.codec === 'string' && isVideoCodec(_searchParams.codec)
-      ? _searchParams.codec
-      : 'vp9';
-  const hq = _searchParams.hq === 'true' ? true : false;
-  const singlePC = _searchParams.singlePC !== 'false';
+  const options = parseRoomOptions(await searchParams);
 
-  return (
-    <PageClientImpl
-      roomName={_params.roomName}
-      region={_searchParams.region}
-      hq={hq}
-      codec={codec}
-      singlePeerConnection={singlePC}
-    />
-  );
+  return <PageClientImpl roomName={_params.roomName} {...options} />;
 }

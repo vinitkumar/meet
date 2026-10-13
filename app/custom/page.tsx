@@ -1,20 +1,23 @@
+'use client';
+
 import { videoCodecs } from 'livekit-client';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { VideoConferenceClientImpl } from './VideoConferenceClientImpl';
 import { isVideoCodec } from '@/lib/types';
 
-export default async function CustomRoomConnection(props: {
-  searchParams: Promise<{
-    liveKitUrl?: string;
-    token?: string;
-    codec?: string;
-    singlePC?: string;
-  }>;
-}) {
-  const { liveKitUrl, token, codec, singlePC } = await props.searchParams;
-  if (typeof liveKitUrl !== 'string') {
+// Reads the query on the client so the page also works as a static export.
+function CustomRoomConnectionImpl() {
+  const searchParams = useSearchParams();
+  const liveKitUrl = searchParams.get('liveKitUrl');
+  const token = searchParams.get('token');
+  const codec = searchParams.get('codec') ?? undefined;
+  const singlePC = searchParams.get('singlePC');
+
+  if (liveKitUrl === null) {
     return <h2>Missing LiveKit URL</h2>;
   }
-  if (typeof token !== 'string') {
+  if (token === null) {
     return <h2>Missing LiveKit token</h2>;
   }
   if (codec !== undefined && !isVideoCodec(codec)) {
@@ -30,5 +33,13 @@ export default async function CustomRoomConnection(props: {
         singlePeerConnection={singlePC === 'true'}
       />
     </main>
+  );
+}
+
+export default function CustomRoomConnection() {
+  return (
+    <Suspense>
+      <CustomRoomConnectionImpl />
+    </Suspense>
   );
 }
